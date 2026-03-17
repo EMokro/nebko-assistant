@@ -212,7 +212,7 @@ export default function Wizard() {
               Einheit: <span className="text-foreground font-medium">{unitId}</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Dokumente: <span className="text-foreground font-medium">{selectedDocIds.length + extraFiles.length} ausgewählt</span>
+              Dokumente: <span className="text-foreground font-medium">{extraFiles.length} hochgeladen</span>
             </p>
           </div>
         </div>
