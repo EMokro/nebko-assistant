@@ -12,6 +12,7 @@ import Immobilien from "@/pages/Immobilien";
 import Personen from "@/pages/Personen";
 import Dokumente from "@/pages/Dokumente";
 import Wizard from "@/pages/Wizard";
+import Abrechnungen from "@/pages/Abrechnungen";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
