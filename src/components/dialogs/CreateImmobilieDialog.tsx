@@ -27,6 +27,11 @@ export default function CreateImmobilieDialog() {
     queryFn: realEstateApi.getGroups,
   });
 
+  const { data: types } = useQuery({
+    queryKey: ["realEstateTypes"],
+    queryFn: realEstateApi.getTypes,
+  });
+
   const mutation = useMutation({
     mutationFn: () =>
       realEstateApi.create({
