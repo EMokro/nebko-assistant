@@ -7,12 +7,14 @@ import {
   Users,
   FileText,
   Sparkles,
+  ClipboardList,
   LogOut,
 } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/abrechnung", label: "Abrechnung", icon: Sparkles },
+  { to: "/abrechnungen", label: "Abrechnungen", icon: ClipboardList },
+  { to: "/abrechnung", label: "Neue Abrechnung", icon: Sparkles },
   { to: "/immobilien", label: "Immobilien", icon: Home },
   { to: "/personen", label: "Personen", icon: Users },
   { to: "/dokumente", label: "Dokumente", icon: FileText },
