@@ -300,31 +300,39 @@ export default function Wizard() {
               </div>
             </div>
 
-            {result && Array.isArray(result) && result.length > 0 ? (
+            {result ? (
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Ergebnis-Positionen</h3>
-                <div className="border rounded-lg overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-muted/40">
-                        <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">#</th>
-                        <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {result.map((item, i) => (
-                        <tr key={i} className="border-t">
-                          <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
-                          <td className="px-4 py-3">
-                            <pre className="text-xs text-foreground whitespace-pre-wrap break-all">
-                              {JSON.stringify(item, null, 2)}
-                            </pre>
-                          </td>
+                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Ergebnis</h3>
+                {Array.isArray(result) && result.length > 0 ? (
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-muted/40">
+                          <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">#</th>
+                          <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Details</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {result.map((item, i) => (
+                          <tr key={i} className="border-t">
+                            <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
+                            <td className="px-4 py-3">
+                              <pre className="text-xs text-foreground whitespace-pre-wrap break-all">
+                                {JSON.stringify(item, null, 2)}
+                              </pre>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="bg-muted/30 rounded-lg p-4">
+                    <pre className="text-xs text-foreground whitespace-pre-wrap break-all">
+                      {JSON.stringify(result, null, 2)}
+                    </pre>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-muted/30 rounded-lg p-6 text-center">
