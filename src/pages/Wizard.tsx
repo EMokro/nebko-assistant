@@ -37,11 +37,6 @@ export default function Wizard() {
   // Step 3+4 — result
   const [assignments, setAssignments] = useState<NebkoAssignment[]>([]);
 
-  const { data: docs, isLoading: docsLoading } = useQuery({
-    queryKey: ["documents"],
-    queryFn: documentApi.getAllMetadata,
-  });
-
   const mutation = useMutation({
     mutationFn: () =>
       generatorApi.start({
