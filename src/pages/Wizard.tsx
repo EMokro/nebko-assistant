@@ -127,50 +127,13 @@ export default function Wizard() {
           {/* Unit selection via cascading selector */}
           <WizardUnitSelector unitId={unitId} onUnitSelected={setUnitId} />
 
-          {/* Document selection */}
           <div className="card-elevated p-5 space-y-4">
-            <h2 className="text-lg font-medium text-foreground">Dokumente auswählen</h2>
+            <h2 className="text-lg font-medium text-foreground">Dokumente hochladen</h2>
             <p className="text-sm text-muted-foreground">
-              Wählen Sie vorhandene Belege oder laden Sie neue hoch.
+              Laden Sie die Belege und Rechnungen für die Abrechnung hoch.
             </p>
 
-            {/* Existing docs */}
-            {docsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Dokumente werden geladen…
-              </div>
-            ) : docs && docs.length > 0 ? (
-              <div className="space-y-1.5 max-h-56 overflow-y-auto">
-                {docs.map((doc: DocumentOutput) => (
-                  <label
-                    key={doc.id}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedDocIds.includes(doc.id)
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:bg-muted/50"
-                    }`}
-                  >
-                    <Checkbox
-                      checked={selectedDocIds.includes(doc.id)}
-                      onCheckedChange={() => toggleDoc(doc.id)}
-                    />
-                    <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">{doc.originalname}</p>
-                      {doc.documentType && (
-                        <p className="text-xs text-muted-foreground">{doc.documentType.name}</p>
-                      )}
-                    </div>
-                  </label>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Noch keine Dokumente vorhanden.</p>
-            )}
-
-            {/* Upload new files */}
-            <div className="pt-2 border-t">
-              <p className="text-sm font-medium text-foreground mb-2">Oder neue Dateien hochladen</p>
+            <div>
               <div
                 onClick={() => inputRef.current?.click()}
                 className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
