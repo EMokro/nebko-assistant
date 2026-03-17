@@ -38,11 +38,6 @@ export default function Wizard() {
   // Step 3+4 — result
   const [result, setResult] = useState<unknown[] | null>(null);
 
-  const { data: units, isLoading: unitsLoading } = useQuery({
-    queryKey: ["realEstateUnits"],
-    queryFn: realEstateApi.getUnits,
-  });
-
   const { data: docs, isLoading: docsLoading } = useQuery({
     queryKey: ["documents"],
     queryFn: documentApi.getAllMetadata,
