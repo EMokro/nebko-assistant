@@ -340,7 +340,7 @@ export default function Wizard() {
             )}
           </div>
 
-          <Button onClick={() => { setStep(0); setAssignments([]); setUnitId(""); setSelectedDocIds([]); setExtraFiles([]); }} variant="outline" className="w-full">
+          <Button onClick={() => { setStep(0); setAssignments([]); setUnitId(""); setExtraFiles([]); }} variant="outline" className="w-full">
             Neue Abrechnung starten
           </Button>
         </div>
