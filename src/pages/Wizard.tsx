@@ -295,7 +295,7 @@ export default function Wizard() {
               <div>
                 <h2 className="text-lg font-medium text-foreground">Abrechnung erstellt</h2>
                 <p className="text-sm text-muted-foreground">
-                  Einheit: {selectedUnit?.name || unitId} · Jahr: {assignmentYear}
+                  Einheit: {unitId} · Jahr: {assignmentYear}
                 </p>
               </div>
             </div>
