@@ -88,7 +88,7 @@ export default function Wizard() {
     }
   }
 
-  const selectedUnit = units?.find((u) => u.id === unitId);
+  const selectedUnitName = unitId; // display the ID for now
 
   return (
     <div className="page-container animate-fade-in">
