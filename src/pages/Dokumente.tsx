@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { documentApi, DocumentOutput } from "@/lib/api";
-import { FileText, Upload, CheckCircle, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FileText, CheckCircle, Clock } from "lucide-react";
+import UploadDocumentDialog from "@/components/dialogs/UploadDocumentDialog";
 
 export default function Dokumente() {
   const { data: docs, isLoading } = useQuery({
