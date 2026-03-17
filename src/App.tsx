@@ -11,7 +11,7 @@ import Dashboard from "@/pages/Dashboard";
 import Immobilien from "@/pages/Immobilien";
 import Personen from "@/pages/Personen";
 import Dokumente from "@/pages/Dokumente";
-import Generator from "@/pages/Generator";
+import Wizard from "@/pages/Wizard";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -31,7 +31,7 @@ const App = () => (
               <Route path="/immobilien" element={<Immobilien />} />
               <Route path="/personen" element={<Personen />} />
               <Route path="/dokumente" element={<Dokumente />} />
-              <Route path="/generator" element={<Generator />} />
+              <Route path="/abrechnung" element={<Wizard />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
