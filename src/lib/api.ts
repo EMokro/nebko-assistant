@@ -268,6 +268,7 @@ export const generatorApi = {
 };
 
 export const nebkoApi = {
+  getAll: () => apiFetch<NebkoAssignment[]>("/nebkoAssignment"),
   getAssignment: (id: string) =>
     apiFetch<NebkoAssignment>(`/nebkoAssignment/${id}`),
   getAssignmentsForUnit: (unitId: string) =>
