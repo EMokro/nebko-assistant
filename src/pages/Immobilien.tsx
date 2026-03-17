@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { realEstateApi, RealEstateGroup, RealEstate } from "@/lib/api";
-import { Home, Plus, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Home, MapPin } from "lucide-react";
+import CreateImmobilienGruppeDialog from "@/components/dialogs/CreateImmobilienGruppeDialog";
+import CreateImmobilieDialog from "@/components/dialogs/CreateImmobilieDialog";
 
 export default function Immobilien() {
   const { data: groups, isLoading: groupsLoading } = useQuery({
