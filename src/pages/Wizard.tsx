@@ -125,39 +125,8 @@ export default function Wizard() {
       {/* Step 0: Unit + Documents */}
       {step === 0 && (
         <div className="space-y-6 max-w-3xl">
-          {/* Unit selection */}
-          <div className="card-elevated p-5 space-y-4">
-            <h2 className="text-lg font-medium text-foreground">Mietobjekt auswählen</h2>
-            <p className="text-sm text-muted-foreground">Welche Einheit soll abgerechnet werden?</p>
-            {unitsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Einheiten werden geladen…
-              </div>
-            ) : units && units.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {units.map((u: RealEstateUnit) => (
-                  <button
-                    key={u.id}
-                    type="button"
-                    onClick={() => setUnitId(u.id)}
-                    className={`flex items-center gap-3 p-3 rounded-lg border text-left text-sm transition-colors ${
-                      unitId === u.id
-                        ? "border-primary bg-primary/5 ring-1 ring-primary"
-                        : "border-border hover:border-primary/40 hover:bg-muted/50"
-                    }`}
-                  >
-                    <Building2 className={`h-5 w-5 flex-shrink-0 ${unitId === u.id ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="font-medium text-foreground">{u.name}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-sm text-warning">
-                <AlertCircle className="h-4 w-4" />
-                Keine Einheiten vorhanden. Bitte legen Sie zuerst eine Immobilie an.
-              </div>
-            )}
-          </div>
+          {/* Unit selection via cascading selector */}
+          <WizardUnitSelector unitId={unitId} onUnitSelected={setUnitId} />
 
           {/* Document selection */}
           <div className="card-elevated p-5 space-y-4">
