@@ -165,6 +165,11 @@ export interface DocumentOutput {
   documentDate?: string;
 }
 
+export interface RealEstateType {
+  id: string;
+  name: string;
+}
+
 export const realEstateApi = {
   getGroups: () => apiFetch<RealEstateGroup[]>("/realEstateGroup/all"),
   createGroup: (data: { name: string; addressLineText: string }) =>
@@ -173,6 +178,7 @@ export const realEstateApi = {
       body: JSON.stringify(data),
     }),
   getAll: () => apiFetch<RealEstate[]>("/realEstate/all"),
+  getTypes: () => apiFetch<RealEstateType[]>("/realEstateType"),
   create: (data: {
     name: string;
     realEstateTypeID: string;
@@ -184,7 +190,6 @@ export const realEstateApi = {
       body: JSON.stringify(data),
     }),
   getUnits: () => apiFetch<RealEstateUnit[]>("/realEstateUnit/all"),
-  // Not in API but we can get units per estate
 };
 
 export const personApi = {

@@ -9,11 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
-const REAL_ESTATE_TYPES = [
-  { id: "apartment", label: "Wohnung" },
-  { id: "house", label: "Haus" },
-  { id: "commercial", label: "Gewerbe" },
-];
 
 export default function CreateImmobilieDialog() {
   const [open, setOpen] = useState(false);
