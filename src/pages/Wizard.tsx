@@ -55,7 +55,7 @@ export default function Wizard() {
         billingPeriodEnd: billingEnd,
       }),
     onSuccess: (data) => {
-      setResult(data as unknown[]);
+      setResult(data);
       toast.success("Abrechnung erfolgreich generiert!");
       setStep(3);
     },
