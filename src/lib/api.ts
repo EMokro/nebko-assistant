@@ -140,7 +140,19 @@ export interface PersonOutput {
   legalName: string;
 }
 
+export interface NebkoPosition {
+  id: string;
+  ownCosts: number;
+  nebkoPositionTypeName: string;
+  totalUnits: number | null;
+  ownUnits: number | null;
+  documentId: string;
+  allocationKeyType: string | null;
+  totalCosts: number;
+}
+
 export interface NebkoAssignment {
+  id?: string;
   assignmentYear: string;
   periodOfUseStart: string;
   periodOfUseEnd: string;
@@ -151,7 +163,7 @@ export interface NebkoAssignment {
   tenantIds: string[];
   co2Costs: number;
   advancedPayments: string[];
-  nebkoPositions: string[];
+  nebkoPositions: NebkoPosition[];
   isValidatedByUser: boolean;
 }
 
