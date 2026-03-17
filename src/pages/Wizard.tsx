@@ -36,7 +36,7 @@ export default function Wizard() {
   const [billingEnd, setBillingEnd] = useState(`${new Date().getFullYear()}-12-31`);
 
   // Step 3+4 — result
-  const [result, setResult] = useState<unknown>(null);
+  const [assignments, setAssignments] = useState<NebkoAssignment[]>([]);
 
   const { data: docs, isLoading: docsLoading } = useQuery({
     queryKey: ["documents"],
