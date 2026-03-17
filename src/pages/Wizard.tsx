@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { realEstateApi, generatorApi, NebkoAssignment, NebkoPosition, nebkoApi } from "@/lib/api";
 import {
   Building2, FileText, Upload, X, ChevronRight, ChevronLeft,
