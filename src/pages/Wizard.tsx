@@ -60,11 +60,6 @@ export default function Wizard() {
     onError: () => toast.error("Fehler beim Generieren der Abrechnung"),
   });
 
-  function toggleDoc(docId: string) {
-    setSelectedDocIds((prev) =>
-      prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
-    );
-  }
 
   function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) setExtraFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
