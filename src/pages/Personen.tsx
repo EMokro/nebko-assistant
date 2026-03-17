@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { personApi, PersonOutput } from "@/lib/api";
-import { Users, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Users } from "lucide-react";
+import CreatePersonDialog from "@/components/dialogs/CreatePersonDialog";
 
 export default function Personen() {
   const { data: persons, isLoading } = useQuery({
