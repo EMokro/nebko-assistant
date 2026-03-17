@@ -72,7 +72,7 @@ export default function Wizard() {
   }
 
   function canProceed(): boolean {
-    if (step === 0) return !!unitId && (selectedDocIds.length > 0 || extraFiles.length > 0);
+    if (step === 0) return !!unitId && extraFiles.length > 0;
     if (step === 1) return !!assignmentYear;
     return true;
   }
