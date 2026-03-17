@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { realEstateApi, documentApi, generatorApi, DocumentOutput } from "@/lib/api";
+import { realEstateApi, documentApi, generatorApi, DocumentOutput, NebkoAssignment, NebkoPosition, nebkoApi } from "@/lib/api";
 import {
   Building2, FileText, Upload, X, ChevronRight, ChevronLeft,
   Sparkles, Check, Loader2, AlertCircle,
@@ -36,7 +36,7 @@ export default function Wizard() {
   const [billingEnd, setBillingEnd] = useState(`${new Date().getFullYear()}-12-31`);
 
   // Step 3+4 — result
-  const [result, setResult] = useState<unknown>(null);
+  const [assignments, setAssignments] = useState<NebkoAssignment[]>([]);
 
   const { data: docs, isLoading: docsLoading } = useQuery({
     queryKey: ["documents"],
@@ -54,9 +54,14 @@ export default function Wizard() {
         billingPeriodStart: billingStart,
         billingPeriodEnd: billingEnd,
       }),
-    onSuccess: (data) => {
-      setResult(data);
+    onSuccess: async () => {
       toast.success("Abrechnung erfolgreich generiert!");
+      try {
+        const data = await nebkoApi.getAssignmentsForUnit(unitId);
+        setAssignments(Array.isArray(data) ? data : [data]);
+      } catch {
+        setAssignments([]);
+      }
       setStep(3);
     },
     onError: () => toast.error("Fehler beim Generieren der Abrechnung"),
@@ -286,9 +291,9 @@ export default function Wizard() {
 
       {/* Step 3: Result */}
       {step === 3 && (
-        <div className="space-y-6 max-w-3xl">
+        <div className="space-y-6 max-w-4xl">
           <div className="card-elevated p-5">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-6">
               <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                 <Check className="h-5 w-5 text-primary" />
               </div>
@@ -300,50 +305,91 @@ export default function Wizard() {
               </div>
             </div>
 
-            {result ? (
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Ergebnis</h3>
-                {Array.isArray(result) && result.length > 0 ? (
-                  <div className="border rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-muted/40">
-                          <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">#</th>
-                          <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Details</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {result.map((item, i) => (
-                          <tr key={i} className="border-t">
-                            <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
-                            <td className="px-4 py-3">
-                              <pre className="text-xs text-foreground whitespace-pre-wrap break-all">
-                                {JSON.stringify(item, null, 2)}
-                              </pre>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+            {assignments.length > 0 ? (
+              <div className="space-y-6">
+                {assignments.map((assignment, ai) => (
+                  <div key={assignment.id ?? ai} className="space-y-4">
+                    {/* Assignment summary */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground">Abrechnungsjahr</p>
+                        <p className="text-sm font-medium text-foreground">{assignment.assignmentYear}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground">CO₂-Kosten</p>
+                        <p className="text-sm font-medium text-foreground">{assignment.co2Costs?.toFixed(2) ?? "–"} €</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground">Nutzungszeitraum</p>
+                        <p className="text-sm font-medium text-foreground">{assignment.periodOfUseStart} – {assignment.periodOfUseEnd}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground">Abrechnungszeitraum</p>
+                        <p className="text-sm font-medium text-foreground">{assignment.billingPeriodStart} – {assignment.billingPeriodEnd}</p>
+                      </div>
+                    </div>
+
+                    {/* NebkoPositions table */}
+                    {assignment.nebkoPositions && assignment.nebkoPositions.length > 0 ? (
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                          Nebenkostenpositionen ({assignment.nebkoPositions.length})
+                        </h3>
+                        <div className="border rounded-lg overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="bg-muted/40">
+                                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Kostenart</th>
+                                <th className="text-left px-4 py-2.5 font-medium text-muted-foreground">Verteilschlüssel</th>
+                                <th className="text-right px-4 py-2.5 font-medium text-muted-foreground">Gesamtkosten</th>
+                                <th className="text-right px-4 py-2.5 font-medium text-muted-foreground">Eigenanteil</th>
+                                <th className="text-right px-4 py-2.5 font-medium text-muted-foreground">Gesamt-Einheiten</th>
+                                <th className="text-right px-4 py-2.5 font-medium text-muted-foreground">Eigen-Einheiten</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {assignment.nebkoPositions.map((pos: NebkoPosition) => (
+                                <tr key={pos.id} className="border-t hover:bg-muted/20 transition-colors">
+                                  <td className="px-4 py-3 font-medium text-foreground">{pos.nebkoPositionTypeName}</td>
+                                  <td className="px-4 py-3 text-muted-foreground">{pos.allocationKeyType ?? "–"}</td>
+                                  <td className="px-4 py-3 text-right text-foreground">{pos.totalCosts.toFixed(2)} €</td>
+                                  <td className="px-4 py-3 text-right font-medium text-primary">{pos.ownCosts.toFixed(2)} €</td>
+                                  <td className="px-4 py-3 text-right text-muted-foreground">{pos.totalUnits ?? "–"}</td>
+                                  <td className="px-4 py-3 text-right text-muted-foreground">{pos.ownUnits ?? "–"}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                            <tfoot>
+                              <tr className="border-t bg-muted/20 font-medium">
+                                <td className="px-4 py-3 text-foreground" colSpan={2}>Summe</td>
+                                <td className="px-4 py-3 text-right text-foreground">
+                                  {assignment.nebkoPositions.reduce((s: number, p: NebkoPosition) => s + p.totalCosts, 0).toFixed(2)} €
+                                </td>
+                                <td className="px-4 py-3 text-right font-medium text-primary">
+                                  {assignment.nebkoPositions.reduce((s: number, p: NebkoPosition) => s + p.ownCosts, 0).toFixed(2)} €
+                                </td>
+                                <td colSpan={2}></td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Keine Nebenkostenpositionen vorhanden.</p>
+                    )}
                   </div>
-                ) : (
-                  <div className="bg-muted/30 rounded-lg p-4">
-                    <pre className="text-xs text-foreground whitespace-pre-wrap break-all">
-                      {JSON.stringify(result, null, 2)}
-                    </pre>
-                  </div>
-                )}
+                ))}
               </div>
             ) : (
               <div className="bg-muted/30 rounded-lg p-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Die Abrechnung wurde gestartet. Das Ergebnis wird verarbeitet.
+                  Keine Abrechnungsdaten gefunden.
                 </p>
               </div>
             )}
           </div>
 
-          <Button onClick={() => { setStep(0); setResult(null); setUnitId(""); setSelectedDocIds([]); setExtraFiles([]); }} variant="outline" className="w-full">
+          <Button onClick={() => { setStep(0); setAssignments([]); setUnitId(""); setSelectedDocIds([]); setExtraFiles([]); }} variant="outline" className="w-full">
             Neue Abrechnung starten
           </Button>
         </div>
