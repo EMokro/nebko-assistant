@@ -247,7 +247,7 @@ export default function Wizard() {
           <div className="card-elevated p-5 space-y-2 bg-muted/30">
             <h3 className="text-sm font-medium text-foreground">Zusammenfassung</h3>
             <p className="text-sm text-muted-foreground">
-              Einheit: <span className="text-foreground font-medium">{selectedUnit?.name || unitId}</span>
+              Einheit: <span className="text-foreground font-medium">{unitId}</span>
             </p>
             <p className="text-sm text-muted-foreground">
               Dokumente: <span className="text-foreground font-medium">{selectedDocIds.length + extraFiles.length} ausgewählt</span>
