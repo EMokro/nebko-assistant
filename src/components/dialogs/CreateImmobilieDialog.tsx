@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { realEstateApi } from "@/lib/api";
+import { realEstateApi, RealEstateType } from "@/lib/api";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
-const REAL_ESTATE_TYPES = [
-  { id: "apartment", label: "Wohnung" },
-  { id: "house", label: "Haus" },
-  { id: "commercial", label: "Gewerbe" },
-];
 
 export default function CreateImmobilieDialog() {
   const [open, setOpen] = useState(false);
@@ -30,6 +25,11 @@ export default function CreateImmobilieDialog() {
   const { data: groups } = useQuery({
     queryKey: ["realEstateGroups"],
     queryFn: realEstateApi.getGroups,
+  });
+
+  const { data: types } = useQuery({
+    queryKey: ["realEstateTypes"],
+    queryFn: realEstateApi.getTypes,
   });
 
   const mutation = useMutation({
@@ -77,8 +77,8 @@ export default function CreateImmobilieDialog() {
               <Select value={typeId} onValueChange={setTypeId} required>
                 <SelectTrigger><SelectValue placeholder="Auswählen" /></SelectTrigger>
                 <SelectContent>
-                  {REAL_ESTATE_TYPES.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>{t.label}</SelectItem>
+                  {types?.map((t: RealEstateType) => (
+                    <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
