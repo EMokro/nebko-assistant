@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { realEstateApi, nebkoApi, NebkoAssignment, NebkoPosition, RealEstateUnit } from "@/lib/api";
+import { nebkoApi, NebkoAssignment, NebkoPosition } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,37 +12,12 @@ import {
   CheckCircle2, Clock, ChevronDown, ChevronUp, FileText, Building2,
 } from "lucide-react";
 
-interface AssignmentWithUnit extends NebkoAssignment {
-  unitName: string;
-}
-
 export default function Abrechnungen() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const { data: units } = useQuery({
-    queryKey: ["realEstateUnits"],
-    queryFn: realEstateApi.getUnits,
-  });
-
   const { data: assignments, isLoading } = useQuery({
-    queryKey: ["allAssignments", units?.map((u) => u.id)],
-    queryFn: async () => {
-      if (!units || units.length === 0) return [];
-      const results = await Promise.allSettled(
-        units.map((unit) =>
-          nebkoApi.getAssignmentsForUnit(unit.id).then((items) =>
-            (Array.isArray(items) ? items : [items]).map((a) => ({
-              ...a,
-              unitName: unit.name,
-            }))
-          )
-        )
-      );
-      return results
-        .filter((r): r is PromiseFulfilledResult<AssignmentWithUnit[]> => r.status === "fulfilled")
-        .flatMap((r) => r.value);
-    },
-    enabled: !!units && units.length > 0,
+    queryKey: ["allAssignments"],
+    queryFn: nebkoApi.getAll,
   });
 
   const toggle = (id: string) =>
