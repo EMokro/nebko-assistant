@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { realEstateApi, documentApi, generatorApi, DocumentOutput, NebkoAssignment, NebkoPosition, nebkoApi } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
+import { realEstateApi, generatorApi, NebkoAssignment, NebkoPosition, nebkoApi } from "@/lib/api";
 import {
   Building2, FileText, Upload, X, ChevronRight, ChevronLeft,
   Sparkles, Check, Loader2, AlertCircle,
@@ -9,7 +9,6 @@ import WizardUnitSelector from "@/components/wizard/WizardUnitSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 const STEPS = [
@@ -24,7 +23,6 @@ export default function Wizard() {
 
   // Step 1 — unit + docs
   const [unitId, setUnitId] = useState("");
-  const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,11 +35,6 @@ export default function Wizard() {
 
   // Step 3+4 — result
   const [assignments, setAssignments] = useState<NebkoAssignment[]>([]);
-
-  const { data: docs, isLoading: docsLoading } = useQuery({
-    queryKey: ["documents"],
-    queryFn: documentApi.getAllMetadata,
-  });
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -67,18 +60,13 @@ export default function Wizard() {
     onError: () => toast.error("Fehler beim Generieren der Abrechnung"),
   });
 
-  function toggleDoc(docId: string) {
-    setSelectedDocIds((prev) =>
-      prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
-    );
-  }
 
   function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) setExtraFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
   }
 
   function canProceed(): boolean {
-    if (step === 0) return !!unitId && (selectedDocIds.length > 0 || extraFiles.length > 0);
+    if (step === 0) return !!unitId && extraFiles.length > 0;
     if (step === 1) return !!assignmentYear;
     return true;
   }
@@ -133,50 +121,13 @@ export default function Wizard() {
           {/* Unit selection via cascading selector */}
           <WizardUnitSelector unitId={unitId} onUnitSelected={setUnitId} />
 
-          {/* Document selection */}
           <div className="card-elevated p-5 space-y-4">
-            <h2 className="text-lg font-medium text-foreground">Dokumente auswählen</h2>
+            <h2 className="text-lg font-medium text-foreground">Dokumente hochladen</h2>
             <p className="text-sm text-muted-foreground">
-              Wählen Sie vorhandene Belege oder laden Sie neue hoch.
+              Laden Sie die Belege und Rechnungen für die Abrechnung hoch.
             </p>
 
-            {/* Existing docs */}
-            {docsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Dokumente werden geladen…
-              </div>
-            ) : docs && docs.length > 0 ? (
-              <div className="space-y-1.5 max-h-56 overflow-y-auto">
-                {docs.map((doc: DocumentOutput) => (
-                  <label
-                    key={doc.id}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedDocIds.includes(doc.id)
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:bg-muted/50"
-                    }`}
-                  >
-                    <Checkbox
-                      checked={selectedDocIds.includes(doc.id)}
-                      onCheckedChange={() => toggleDoc(doc.id)}
-                    />
-                    <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">{doc.originalname}</p>
-                      {doc.documentType && (
-                        <p className="text-xs text-muted-foreground">{doc.documentType.name}</p>
-                      )}
-                    </div>
-                  </label>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Noch keine Dokumente vorhanden.</p>
-            )}
-
-            {/* Upload new files */}
-            <div className="pt-2 border-t">
-              <p className="text-sm font-medium text-foreground mb-2">Oder neue Dateien hochladen</p>
+            <div>
               <div
                 onClick={() => inputRef.current?.click()}
                 className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
@@ -255,7 +206,7 @@ export default function Wizard() {
               Einheit: <span className="text-foreground font-medium">{unitId}</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Dokumente: <span className="text-foreground font-medium">{selectedDocIds.length + extraFiles.length} ausgewählt</span>
+              Dokumente: <span className="text-foreground font-medium">{extraFiles.length} hochgeladen</span>
             </p>
           </div>
         </div>
@@ -389,7 +340,7 @@ export default function Wizard() {
             )}
           </div>
 
-          <Button onClick={() => { setStep(0); setAssignments([]); setUnitId(""); setSelectedDocIds([]); setExtraFiles([]); }} variant="outline" className="w-full">
+          <Button onClick={() => { setStep(0); setAssignments([]); setUnitId(""); setExtraFiles([]); }} variant="outline" className="w-full">
             Neue Abrechnung starten
           </Button>
         </div>
