@@ -26,6 +26,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
+    // Demo bypass
+    if (email === "test@test.de") {
+      const demoUser: User = { id: "demo-001", name: "Test Benutzer", email: "test@test.de" };
+      setTokens({ accessToken: "demo-token", refreshToken: "demo-refresh" });
+      localStorage.setItem("nebko_user", JSON.stringify(demoUser));
+      setUser(demoUser);
+      return;
+    }
     const res = await authApi.login(email, password);
     setTokens({ accessToken: res.accessToken, refreshToken: res.refreshToken });
     localStorage.setItem("nebko_user", JSON.stringify(res.user));
