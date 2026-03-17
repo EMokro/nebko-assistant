@@ -16,10 +16,7 @@ export default function Dokumente() {
           <h1 className="text-2xl font-semibold text-foreground">Dokumente</h1>
           <p className="text-muted-foreground mt-1">Belege und Rechnungen verwalten.</p>
         </div>
-        <Button>
-          <Upload className="h-4 w-4 mr-2" />
-          Hochladen
-        </Button>
+        <UploadDocumentDialog />
       </div>
 
       {isLoading ? (

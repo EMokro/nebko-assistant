@@ -24,10 +24,10 @@ export default function Immobilien() {
           <h1 className="text-2xl font-semibold text-foreground">Immobilien</h1>
           <p className="text-muted-foreground mt-1">Verwalten Sie Ihre Immobiliengruppen und Objekte.</p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Immobilie hinzufügen
-        </Button>
+        <div className="flex gap-2">
+          <CreateImmobilienGruppeDialog />
+          <CreateImmobilieDialog />
+        </div>
       </div>
 
       {isLoading ? (
