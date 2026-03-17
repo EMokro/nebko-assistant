@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { documentApi, DocumentOutput } from "@/lib/api";
-import { FileText, Upload, CheckCircle, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FileText, CheckCircle, Clock } from "lucide-react";
+import UploadDocumentDialog from "@/components/dialogs/UploadDocumentDialog";
 
 export default function Dokumente() {
   const { data: docs, isLoading } = useQuery({
@@ -16,10 +16,7 @@ export default function Dokumente() {
           <h1 className="text-2xl font-semibold text-foreground">Dokumente</h1>
           <p className="text-muted-foreground mt-1">Belege und Rechnungen verwalten.</p>
         </div>
-        <Button>
-          <Upload className="h-4 w-4 mr-2" />
-          Hochladen
-        </Button>
+        <UploadDocumentDialog />
       </div>
 
       {isLoading ? (

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { personApi, PersonOutput } from "@/lib/api";
-import { Users, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Users } from "lucide-react";
+import CreatePersonDialog from "@/components/dialogs/CreatePersonDialog";
 
 export default function Personen() {
   const { data: persons, isLoading } = useQuery({
@@ -16,10 +16,7 @@ export default function Personen() {
           <h1 className="text-2xl font-semibold text-foreground">Personen</h1>
           <p className="text-muted-foreground mt-1">Mieter und Eigentümer verwalten.</p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Person hinzufügen
-        </Button>
+        <CreatePersonDialog />
       </div>
 
       {isLoading ? (
