@@ -77,8 +77,8 @@ export default function CreateImmobilieDialog() {
               <Select value={typeId} onValueChange={setTypeId} required>
                 <SelectTrigger><SelectValue placeholder="Auswählen" /></SelectTrigger>
                 <SelectContent>
-                  {REAL_ESTATE_TYPES.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>{t.label}</SelectItem>
+                  {types?.map((t: RealEstateType) => (
+                    <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
