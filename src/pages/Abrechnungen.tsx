@@ -74,7 +74,7 @@ export default function Abrechnungen() {
                         </div>
                         <div>
                           <CardTitle className="text-base">
-                            {a.unitName} · {a.assignmentYear}
+                            {a.assignmentYear}
                           </CardTitle>
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {a.billingPeriodStart} – {a.billingPeriodEnd}
