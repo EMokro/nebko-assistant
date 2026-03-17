@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { realEstateApi, documentApi, generatorApi, RealEstateUnit, DocumentOutput } from "@/lib/api";
+import { realEstateApi, documentApi, generatorApi, DocumentOutput } from "@/lib/api";
 import {
   Building2, FileText, Upload, X, ChevronRight, ChevronLeft,
   Sparkles, Check, Loader2, AlertCircle,
 } from "lucide-react";
+import WizardUnitSelector from "@/components/wizard/WizardUnitSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,11 +37,6 @@ export default function Wizard() {
 
   // Step 3+4 — result
   const [result, setResult] = useState<unknown[] | null>(null);
-
-  const { data: units, isLoading: unitsLoading } = useQuery({
-    queryKey: ["realEstateUnits"],
-    queryFn: realEstateApi.getUnits,
-  });
 
   const { data: docs, isLoading: docsLoading } = useQuery({
     queryKey: ["documents"],
@@ -92,7 +88,7 @@ export default function Wizard() {
     }
   }
 
-  const selectedUnit = units?.find((u) => u.id === unitId);
+  const selectedUnitName = unitId; // display the ID for now
 
   return (
     <div className="page-container animate-fade-in">
@@ -129,39 +125,8 @@ export default function Wizard() {
       {/* Step 0: Unit + Documents */}
       {step === 0 && (
         <div className="space-y-6 max-w-3xl">
-          {/* Unit selection */}
-          <div className="card-elevated p-5 space-y-4">
-            <h2 className="text-lg font-medium text-foreground">Mietobjekt auswählen</h2>
-            <p className="text-sm text-muted-foreground">Welche Einheit soll abgerechnet werden?</p>
-            {unitsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Einheiten werden geladen…
-              </div>
-            ) : units && units.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {units.map((u: RealEstateUnit) => (
-                  <button
-                    key={u.id}
-                    type="button"
-                    onClick={() => setUnitId(u.id)}
-                    className={`flex items-center gap-3 p-3 rounded-lg border text-left text-sm transition-colors ${
-                      unitId === u.id
-                        ? "border-primary bg-primary/5 ring-1 ring-primary"
-                        : "border-border hover:border-primary/40 hover:bg-muted/50"
-                    }`}
-                  >
-                    <Building2 className={`h-5 w-5 flex-shrink-0 ${unitId === u.id ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="font-medium text-foreground">{u.name}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-sm text-warning">
-                <AlertCircle className="h-4 w-4" />
-                Keine Einheiten vorhanden. Bitte legen Sie zuerst eine Immobilie an.
-              </div>
-            )}
-          </div>
+          {/* Unit selection via cascading selector */}
+          <WizardUnitSelector unitId={unitId} onUnitSelected={setUnitId} />
 
           {/* Document selection */}
           <div className="card-elevated p-5 space-y-4">
@@ -282,7 +247,7 @@ export default function Wizard() {
           <div className="card-elevated p-5 space-y-2 bg-muted/30">
             <h3 className="text-sm font-medium text-foreground">Zusammenfassung</h3>
             <p className="text-sm text-muted-foreground">
-              Einheit: <span className="text-foreground font-medium">{selectedUnit?.name || unitId}</span>
+              Einheit: <span className="text-foreground font-medium">{unitId}</span>
             </p>
             <p className="text-sm text-muted-foreground">
               Dokumente: <span className="text-foreground font-medium">{selectedDocIds.length + extraFiles.length} ausgewählt</span>
@@ -330,7 +295,7 @@ export default function Wizard() {
               <div>
                 <h2 className="text-lg font-medium text-foreground">Abrechnung erstellt</h2>
                 <p className="text-sm text-muted-foreground">
-                  Einheit: {selectedUnit?.name || unitId} · Jahr: {assignmentYear}
+                  Einheit: {unitId} · Jahr: {assignmentYear}
                 </p>
               </div>
             </div>

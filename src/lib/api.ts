@@ -190,6 +190,13 @@ export const realEstateApi = {
       body: JSON.stringify(data),
     }),
   getUnits: () => apiFetch<RealEstateUnit[]>("/realEstateUnit/all"),
+  getUnitsByRealEstate: (realEstateId: string) =>
+    apiFetch<RealEstateUnit[]>(`/realEstateUnit/by-real-estate/${realEstateId}`),
+  createUnit: (data: { name: string; realEstateId: string }) =>
+    apiFetch<RealEstateUnit>("/realEstateUnit/create", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 };
 
 export const personApi = {
