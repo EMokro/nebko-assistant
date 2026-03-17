@@ -54,9 +54,14 @@ export default function Wizard() {
         billingPeriodStart: billingStart,
         billingPeriodEnd: billingEnd,
       }),
-    onSuccess: (data) => {
-      setResult(data);
+    onSuccess: async () => {
       toast.success("Abrechnung erfolgreich generiert!");
+      try {
+        const data = await nebkoApi.getAssignmentsForUnit(unitId);
+        setAssignments(Array.isArray(data) ? data : [data]);
+      } catch {
+        setAssignments([]);
+      }
       setStep(3);
     },
     onError: () => toast.error("Fehler beim Generieren der Abrechnung"),
