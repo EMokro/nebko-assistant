@@ -24,7 +24,6 @@ export default function Wizard() {
 
   // Step 1 — unit + docs
   const [unitId, setUnitId] = useState("");
-  const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
