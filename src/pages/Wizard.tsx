@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { realEstateApi, documentApi, generatorApi, RealEstateUnit, DocumentOutput } from "@/lib/api";
+import { realEstateApi, documentApi, generatorApi, DocumentOutput } from "@/lib/api";
 import {
   Building2, FileText, Upload, X, ChevronRight, ChevronLeft,
   Sparkles, Check, Loader2, AlertCircle,
 } from "lucide-react";
+import WizardUnitSelector from "@/components/wizard/WizardUnitSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
